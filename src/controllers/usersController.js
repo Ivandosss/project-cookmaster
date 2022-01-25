@@ -1,20 +1,20 @@
 const status = require('http-status-codes').StatusCodes;
 const { userCreateService } = require('../services/userService');
 
-const MESSAGE = { message: 'NOT FOUND' };
-
-const createUserController = async (req, res) => {
+const createUserController = async (req, res, next) => {
+  const { name, password, email } = req.body;
+  const { role } = req;
   let create;
   
   try {
-    create = await userCreateService(req.body);
+    create = await userCreateService(name, email, password, role);
   } catch (error) {
-    return res.status(status.BAD_REQUEST).json({ message: 'connection error' });
+    console.error(error.message);
+    return next(error);
   }
-  delete create.password;
-  return create 
-  ? res.status(status.CREATED).json({ user: { ...create, role: 'user' } })
-  : res.status(status.UNPROCESSABLE_ENTITY).json(MESSAGE);
+  return create.code 
+  ? res.status(create.code).json({ message: create.message })
+  : res.status(status.CREATED).json(create);
 };
 
 module.exports = {
