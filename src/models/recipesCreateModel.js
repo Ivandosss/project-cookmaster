@@ -7,6 +7,18 @@ const recipesCreateModel = async (body) => {
   return insertedId;
 };
 
+const recipesSearchModel = async () => {
+  try {
+    const db = await connection();
+    const recipes = await db.collection('recipes')
+    .find().toArray();
+    return recipes || null;
+  } catch (error) {
+    return error.message;
+  }
+};
+
 module.exports = {
   recipesCreateModel,
+  recipesSearchModel,
 };

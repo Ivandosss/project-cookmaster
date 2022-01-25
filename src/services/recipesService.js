@@ -1,8 +1,8 @@
 const status = require('http-status-codes').StatusCodes;
-const { invalidEntries } = require('../dicionario/messages');
+const { invalidEntries, notFoundRecipe } = require('../dicionario/messages');
 const errors = require('../funcoes');
 const { recipeSchema } = require('./joi');
-const { recipesCreateModel } = require('../models/recipesCreateModel');
+const { recipesCreateModel, recipesSearchModel } = require('../models/recipesCreateModel');
 
 const recipesCreateService = async (body) => {
   const { name, ingredients, preparation } = body;
@@ -15,6 +15,15 @@ const recipesCreateService = async (body) => {
   return { recipe: { _id: id, ...body } };
 };
 
+const recipesSearchService = async () => {
+  const recipes = await recipesSearchModel();
+
+  if (!recipes) return errors(status.NOT_FOUND, notFoundRecipe);
+
+  return recipes;
+};
+
 module.exports = {
   recipesCreateService,
+  recipesSearchService,
 };

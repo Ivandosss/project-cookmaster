@@ -1,5 +1,5 @@
 const status = require('http-status-codes').StatusCodes;
-const { recipesCreateService } = require('../services/recipesService');
+const { recipesCreateService, recipesSearchService } = require('../services/recipesService');
 
 const recipesCreateController = async (req, res, next) => {
   const { body } = req;
@@ -17,6 +17,17 @@ const recipesCreateController = async (req, res, next) => {
   : res.status(status.BAD_REQUEST).json({ message: result.message });
 };
 
+const recipesSearchController = async (req, res, next) => {
+  try {
+    const recipes = await recipesSearchService();
+    return res.status(status.OK).json(recipes);
+  } catch (error) {
+    console.error(error.message);
+    return next(error);
+  }
+};
+
 module.exports = {
   recipesCreateController,
+  recipesSearchController,
 };
