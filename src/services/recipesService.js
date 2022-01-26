@@ -5,7 +5,8 @@ const errors = require('../funcoes');
 const { recipeSchema } = require('./joi');
 const { 
   recipesCreateModel, 
-  recipesSearchModel, recipesSearchByIdModel } = require('../models/recipesCreateModel');
+  recipesSearchModel, 
+  recipesSearchByIdModel, recipeUpdateModel } = require('../models/recipesCreateModel');
 
 const recipesCreateService = async (body) => {
   const { name, ingredients, preparation } = body;
@@ -33,8 +34,19 @@ const recipesSearchByIdService = async (id) => {
   return recipes;
 };
 
+const recipeUpdateService = async (id, userId, recipe) => {
+  if (!ObjectId.isValid(id)) return errors(status.NOT_FOUND, notFoundRecipe);
+
+  const { error } = recipeSchema.validate(recipe);
+  if (error) return errors(status.BAD_REQUEST, invalidEntries);
+
+  await recipeUpdateModel(id, recipe);
+  return { _id: id, ...recipe, userId };
+};
+
 module.exports = {
   recipesCreateService,
   recipesSearchService,
   recipesSearchByIdService,
+  recipeUpdateService,
 };
