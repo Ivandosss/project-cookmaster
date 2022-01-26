@@ -6,6 +6,7 @@ const {
   recipesSearchController,
   recipesSearchByIdController,
   recipeUpdateController,
+  recipesDeleteController,
 } = require('../controllers/recipesController');
 const { createUserController } = require('../controllers/usersController');
 const { tokenValidation } = require('../middlewares/tokenValidation');
@@ -40,6 +41,12 @@ router.put(
   '/recipes/:id',
   tokenValidation,
   recipeUpdateController,
+);
+
+router.delete(
+  '/recipes/:id',
+  tokenValidation,
+  recipesDeleteController,
 );
 
 module.exports = router;
