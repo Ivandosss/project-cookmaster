@@ -4,7 +4,8 @@ const {
   recipesSearchService, 
   recipesSearchByIdService, 
   recipeUpdateService, 
-  recipesDeleteServices, 
+  recipesDeleteServices,
+  imageUpdateService, 
 } = require('../services/recipesService');
 const { notFoundRecipe } = require('../dicionario/messages');
 
@@ -80,10 +81,29 @@ const recipesDeleteController = async (req, res, next) => {
   }
 };
 
+const imageUpdateController = async (req, res, next) => {
+  const { id } = req.params;
+  const { filename } = req.file;
+  
+  let recipe;
+
+  try {
+    recipe = await imageUpdateService(id, filename);
+  } catch (error) {
+    console.error(error.message);
+    return next(error);
+  }
+  console.log('Conttroller', recipe);
+  return recipe
+  ? res.status(status.OK).json(recipe)
+  : res.status(status.NO_CONTENT).json();
+};
+
 module.exports = {
   recipesCreateController,
   recipesSearchController,
   recipesSearchByIdController,
   recipeUpdateController,
   recipesDeleteController,
+  imageUpdateController,
 };

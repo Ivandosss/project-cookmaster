@@ -7,8 +7,10 @@ const {
   recipesSearchByIdController,
   recipeUpdateController,
   recipesDeleteController,
+  imageUpdateController,
 } = require('../controllers/recipesController');
 const { createUserController } = require('../controllers/usersController');
+const multer = require('../middlewares/multer');
 const { tokenValidation } = require('../middlewares/tokenValidation');
 
 router.post(
@@ -47,6 +49,13 @@ router.delete(
   '/recipes/:id',
   tokenValidation,
   recipesDeleteController,
+);
+
+router.put(
+  '/recipes/:id/image',
+  tokenValidation,
+  multer,
+  imageUpdateController,
 );
 
 module.exports = router;

@@ -54,10 +54,25 @@ const recipesDeleteServices = async (id) => {
   await recipesDeleteModel();
 };
 
+const imageUpdateService = async (id, filename) => {
+  const recipe = await recipesSearchByIdModel(id);
+console.log('service', recipe);
+  await recipeUpdateModel(id, {
+    image: `localhost:3000/src/uploads/${filename}`,
+    ...recipe,
+  });
+
+  return {
+    image: `localhost:3000/src/uploads/${filename}`,
+    ...recipe,
+  } || null;
+};
+
 module.exports = {
   recipesCreateService,
   recipesSearchService,
   recipesSearchByIdService,
   recipeUpdateService,
   recipesDeleteServices,
+  imageUpdateService,
 };
