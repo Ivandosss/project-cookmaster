@@ -1,5 +1,8 @@
 const status = require('http-status-codes').StatusCodes;
-const { recipesCreateService, recipesSearchService } = require('../services/recipesService');
+const { 
+  recipesCreateService, 
+  recipesSearchService, recipesSearchByIdService } = require('../services/recipesService');
+const { notFoundRecipe } = require('../dicionario/messages');
 
 const recipesCreateController = async (req, res, next) => {
   const { body } = req;
@@ -27,7 +30,23 @@ const recipesSearchController = async (req, res, next) => {
   }
 };
 
+const recipesSearchByIdController = async (req, res, next) => {
+  const { id } = req.params;
+  let recipe;
+  try {
+    recipe = await recipesSearchByIdService(id);
+  } catch (error) {
+    console.error(error.message);
+    return next(error);
+  }
+
+  return recipe.code
+  ? res.status(status.NOT_FOUND).json({ message: notFoundRecipe })
+  : res.status(status.OK).json(recipe);
+};
+
 module.exports = {
   recipesCreateController,
   recipesSearchController,
+  recipesSearchByIdController,
 };

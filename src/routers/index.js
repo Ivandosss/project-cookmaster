@@ -4,6 +4,7 @@ const { loginController } = require('../controllers/loginController');
 const {
   recipesCreateController, 
   recipesSearchController,
+  recipesSearchByIdController,
 } = require('../controllers/recipesController');
 const { createUserController } = require('../controllers/usersController');
 const { tokenValidation } = require('../middlewares/tokenValidation');
@@ -27,6 +28,11 @@ router.post(
 router.get(
   '/recipes',
   recipesSearchController,
+);
+
+router.get(
+  '/recipes/:id',
+  recipesSearchByIdController,
 );
 
 module.exports = router;
